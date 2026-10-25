@@ -214,38 +214,58 @@
   </main>
 
   <script>
-    document
-      .getElementById("entryForm")
-      .addEventListener("submit", function (event) {
-        event.preventDefault();
+  document
+    .getElementById("entryForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
 
-        const prolificId =
-          document.getElementById("prolificId").value.trim();
+      const prolificId =
+        document.getElementById("prolificId").value.trim();
 
-        const consent =
-          document.querySelector('input[name="consent"]:checked');
+      const consent =
+        document.querySelector('input[name="consent"]:checked');
 
-        const experience =
-          document.querySelector('input[name="experience"]:checked');
+      const experience =
+        document.querySelector('input[name="experience"]:checked');
 
-        const errorMessage =
-          document.getElementById("errorMessage");
+      const errorMessage =
+        document.getElementById("errorMessage");
 
-        errorMessage.style.display = "none";
-        errorMessage.textContent = "";
+      errorMessage.style.display = "none";
+      errorMessage.textContent = "";
 
-        if (!prolificId || !consent || !experience) {
-          errorMessage.textContent =
-            "Please complete all required fields.";
-          errorMessage.style.display = "block";
-          return;
-        }
-
+      if (!prolificId || !consent || !experience) {
         errorMessage.textContent =
-          "The website is currently being configured. Please do not submit real study responses yet.";
+          "Please complete all required fields.";
         errorMessage.style.display = "block";
+        return;
+      }
+
+      // Create a temporary form to submit data to Google Apps Script.
+      const submissionForm = document.createElement("form");
+      submissionForm.method = "POST";
+      submissionForm.action =
+        "https://script.google.com/macros/s/AKfycbyyLR4d8Zrn1ajLR9Jvg2Spwt7pvYtvCsUU1uwqD2UdAVVuwFQtQZrv0soK9Nr4-VHb/exec";
+      submissionForm.target = "_self";
+
+      const fields = {
+        prolificId: prolificId,
+        consent: consent.value,
+        experience: experience.value
+      };
+
+      Object.entries(fields).forEach(function ([name, value]) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
+        submissionForm.appendChild(input);
       });
-  </script>
+
+      document.body.appendChild(submissionForm);
+      submissionForm.submit();
+    });
+</script>
 
 </body>
 </html>
