@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Study 1 | Research Participation</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px;
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      color: #263238;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 36px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #203864;
+      font-size: 28px;
+      line-height: 1.4;
+    }
+
+    h2 {
+      margin-top: 28px;
+      color: #203864;
+      font-size: 19px;
+    }
+
+    .notice {
+      padding: 16px;
+      background: #eef4ff;
+      border-left: 4px solid #4472c4;
+      border-radius: 4px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: 600;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: 1px solid #cbd2d9;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 12px 0;
+      font-weight: normal;
+    }
+
+    .radio-option input {
+      margin-top: 6px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      background: #203864;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #31528a;
+    }
+
+    .error {
+      display: none;
+      margin-top: 16px;
+      color: #b42318;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 28px;
+      color: #667085;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 24px 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+
+    <h1>Study 1: Research Participation</h1>
+
+    <p>
+      Thank you for your interest in participating in this academic
+      research study.
+    </p>
+
+    <div class="notice">
+      <strong>Before you begin</strong>
+      <p>
+        Please read the information below carefully before deciding
+        whether to participate.
+      </p>
+      <ul>
+        <li>Your participation is voluntary.</li>
+        <li>Please provide your Prolific ID accurately.</li>
+        <li>The study is intended for academic research purposes.</li>
+        <li>
+          Your eligibility will be checked before you enter the
+          experimental procedure.
+        </li>
+      </ul>
+    </div>
+
+    <h2>Consent to Participate</h2>
+
+    <p>
+      By selecting "I agree" below, you confirm that you have read
+      the information provided and voluntarily agree to participate
+      in this research study.
+    </p>
+
+    <form id="entryForm">
+
+      <label for="prolificId">Your Prolific ID</label>
+
+      <input
+        type="text"
+        id="prolificId"
+        name="prolificId"
+        placeholder="Enter your Prolific ID"
+        required
+        autocomplete="off"
+      >
+
+      <h2>Consent</h2>
+
+      <label class="radio-option">
+        <input
+          type="radio"
+          name="consent"
+          value="yes"
+          required
+        >
+        <span>
+          I have read the information above and agree to participate
+          in this research study.
+        </span>
+      </label>
+
+      <h2>AI Chatbot Experience</h2>
+
+      <p>
+        Have you ever interacted with or used an AI chatbot before?
+        For example, ChatGPT, Siri or other voice assistants, or
+        the intelligent customer service in various apps.
+      </p>
+
+      <label class="radio-option">
+        <input
+          type="radio"
+          name="experience"
+          value="yes"
+          required
+        >
+        <span>
+          Yes, I have used or interacted with one.
+        </span>
+      </label>
+
+      <label class="radio-option">
+        <input
+          type="radio"
+          name="experience"
+          value="no"
+        >
+        <span>
+          No, I have never had any experience with one.
+        </span>
+      </label>
+
+      <button type="submit">Continue</button>
+
+      <p id="errorMessage" class="error" role="alert"></p>
+
+    </form>
+
+    <div class="footer">
+      Study 1 | Academic Research
+    </div>
+
+  </main>
+
+  <script>
+    document
+      .getElementById("entryForm")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const prolificId =
+          document.getElementById("prolificId").value.trim();
+
+        const consent =
+          document.querySelector('input[name="consent"]:checked');
+
+        const experience =
+          document.querySelector('input[name="experience"]:checked');
+
+        const errorMessage =
+          document.getElementById("errorMessage");
+
+        errorMessage.style.display = "none";
+        errorMessage.textContent = "";
+
+        if (!prolificId || !consent || !experience) {
+          errorMessage.textContent =
+            "Please complete all required fields.";
+          errorMessage.style.display = "block";
+          return;
+        }
+
+        errorMessage.textContent =
+          "The website is currently being configured. Please do not submit real study responses yet.";
+        errorMessage.style.display = "block";
+      });
+  </script>
+
+</body>
+</html>
