@@ -398,7 +398,37 @@ errorMessage.style.display = "block";
       submissionForm.submit();
       submissionForm.remove();
     });
-</script>
+// Continue to the Google Form after the participant clicks Next.
+document
+.getElementById("nextButton")
+.addEventListener("click", function () {
+const result = window.studyAssignmentResult;
+
+  if (!result || result.status !== "assigned") {
+    alert("Your study assignment could not be verified. Please contact the research team.");
+    return;
+  }
+
+  if (!result.surveyUrl) {
+    alert("The questionnaire link is unavailable. Please contact the research team.");
+    return;
+  }
+
+  // Add the participant's Prolific ID to the Google Form URL.
+  const surveyUrl = new URL(result.surveyUrl);
+  surveyUrl.searchParams.set(
+    "usp",
+    "pp_url"
+  );
+  surveyUrl.searchParams.set(
+    "entry.818770166",
+    result.prolificId || document.getElementById("prolificId").value.trim()
+  );
+
+  // Open the questionnaire in the current tab.
+  window.location.href = surveyUrl.toString();
+});
+  </script>
 
 </body>
 </html>
