@@ -340,10 +340,28 @@ if (result.status === "screened_out") {
 
 // Handle successful assignment.
 if (result.status === "assigned") {
-  errorMessage.textContent =
-    "Assignment received. The next step will display your study video.";
-  errorMessage.style.display = "block";
-  return;
+const entryForm = document.getElementById("entryForm");
+const videoPage = document.getElementById("videoPage");
+const studyVideo = document.getElementById("studyVideo");
+
+if (!result.videoUrl || !entryForm || !videoPage || !studyVideo) {
+errorMessage.textContent =
+"We could not load your assigned study video. Please contact the research team.";
+errorMessage.style.display = "block";
+return;
+}
+
+// Hide the entry form and show the assigned video.
+entryForm.style.display = "none";
+videoPage.style.display = "block";
+
+// Load the video assigned by the server.
+studyVideo.src = result.videoUrl;
+
+// Hide any previous error message.
+errorMessage.style.display = "none";
+
+return;
 }
 
 // Handle unexpected responses.
