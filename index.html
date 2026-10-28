@@ -241,12 +241,69 @@
         return;
       }
 
-      // Create a temporary form to submit data to Google Apps Script.
+      // Prevent repeated submissions while processing.
+      const submitButton =
+        document.querySelector('#entryForm button[type="submit"]');
+
+      if (submitButton) {
+        submitButton.disabled = true;
+      }
+
+      // Create or reuse a hidden iframe for the Apps Script response.
+      let resultFrame = document.getElementById("assignmentFrame");
+
+      if (!resultFrame) {
+        resultFrame = document.createElement("iframe");
+        resultFrame.id = "assignmentFrame";
+        resultFrame.name = "assignmentFrame";
+        resultFrame.style.display = "none";
+        resultFrame.setAttribute("title", "Assignment processing");
+        document.body.appendChild(resultFrame);
+      }
+
+      // Listen for the assignment result from Apps Script.
+      function handleAssignmentMessage(messageEvent) {
+        // Accept messages only from the iframe we created.
+        if (messageEvent.source !== resultFrame.contentWindow) {
+          return;
+        }
+
+        const data = messageEvent.data;
+
+        if (
+          !data ||
+          data.type !== "STUDY1_ASSIGNMENT_RESULT" ||
+          !data.payload
+        ) {
+          return;
+        }
+
+        window.removeEventListener(
+          "message",
+          handleAssignmentMessage
+        );
+
+        if (submitButton) {
+          submitButton.disabled = false;
+        }
+
+        // Keep the result available for the next step.
+        window.studyAssignmentResult = data.payload;
+
+        // Temporary confirmation for testing.
+        errorMessage.textContent =
+          "Assignment received. The next step will display your study video.";
+        errorMessage.style.display = "block";
+      }
+
+      window.addEventListener("message", handleAssignmentMessage);
+
+      // Create a temporary POST form.
       const submissionForm = document.createElement("form");
       submissionForm.method = "POST";
       submissionForm.action =
         "https://script.google.com/macros/s/AKfycbyyLR4d8Zrn1ajLR9Jvg2Spwt7pvYtvCsUU1uwqD2UdAVVuwFQtQZrv0soK9Nr4-VHb/exec";
-      submissionForm.target = "_self";
+      submissionForm.target = "assignmentFrame";
 
       const fields = {
         prolificId: prolificId,
@@ -264,6 +321,7 @@
 
       document.body.appendChild(submissionForm);
       submissionForm.submit();
+      submissionForm.remove();
     });
 </script>
 
