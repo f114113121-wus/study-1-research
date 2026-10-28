@@ -290,10 +290,42 @@
         // Keep the result available for the next step.
         window.studyAssignmentResult = data.payload;
 
-        // Temporary confirmation for testing.
-        errorMessage.textContent =
-          "Assignment received. The next step will display your study video.";
-        errorMessage.style.display = "block";
+        const result = data.payload;
+
+// Handle errors returned by Apps Script.
+if (result.status === "error") {
+  errorMessage.textContent =
+    result.detail || result.message || "Something went wrong. Please try again.";
+  errorMessage.style.display = "block";
+  return;
+}
+
+// Handle participants who are not eligible.
+if (result.status === "screened_out") {
+  if (result.redirectUrl) {
+    window.location.href = result.redirectUrl;
+    return;
+  }
+
+  errorMessage.textContent =
+    "You are not eligible to participate in this study.";
+  errorMessage.style.display = "block";
+  return;
+}
+
+// Handle successful assignment.
+if (result.status === "assigned") {
+  errorMessage.textContent =
+    "Assignment received. The next step will display your study video.";
+  errorMessage.style.display = "block";
+  return;
+}
+
+// Handle unexpected responses.
+errorMessage.textContent =
+  result.message ||
+  "We could not process your request. Please try again later.";
+errorMessage.style.display = "block";
       }
 
       window.addEventListener("message", handleAssignmentMessage);
