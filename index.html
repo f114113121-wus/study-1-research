@@ -414,19 +414,8 @@ const result = window.studyAssignmentResult;
     return;
   }
 
-  // Add the participant's Prolific ID to the Google Form URL.
-  const surveyUrl = new URL(result.surveyUrl);
-  surveyUrl.searchParams.set(
-    "usp",
-    "pp_url"
-  );
-  surveyUrl.searchParams.set(
-    "entry.818770166",
-    result.prolificId || document.getElementById("prolificId").value.trim()
-  );
-
-  // Open the questionnaire in the current tab.
-  window.location.href = surveyUrl.toString();
+  // Open the prefilled Google Form URL created by Apps Script.
+window.location.href = result.surveyUrl;
 });
   </script>
 
